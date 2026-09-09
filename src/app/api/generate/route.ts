@@ -1,34 +1,62 @@
 import { NextResponse } from 'next/server';
+import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
 export async function POST(request: Request) {
   try {
-    const { researchField, resumeText } = await request.json();
+    const formData = await request.formData();
+    const file = formData.get('resume') as File;
+    const researchField = formData.get('researchField') as string;
 
-    // TODO: Initialize @google/genai SDK here with GEMINI_API_KEY
-    // Example logic for finding professors (Mocked for UI demo)
-    
-    const prompt = `You are an expert PhD consultant. Based on the resume text and the field "${researchField}", suggest 3 top professors globally who are currently active in this field. Format as JSON array with {name, university, match_score, email_draft}.`;
-    
-    // Simulating Gemini API Call Delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    if (!file || !researchField) {
+      return NextResponse.json({ success: false, error: "Missing file or research field" }, { status: 400 });
+    }
 
-    const mockedResponse = [
-      {
-        name: "Dr. Andrew Ng",
-        university: "Stanford University",
-        match_score: 98,
-        email_draft: `Dear Prof. Ng,\n\nI am reaching out to express my interest...`
-      },
-      {
-        name: "Dr. Yann LeCun",
-        university: "New York University",
-        match_score: 95,
-        email_draft: `Dear Prof. LeCun,\n\nI recently read your paper on...`
+    const arrayBuffer = await file.arrayBuffer();
+    const base64Data = Buffer.from(arrayBuffer).toString('base64');
+
+    const prompt = `
+      You are an expert PhD consultant.
+      1. Analyze the provided resume (PDF).
+      2. Based on the candidate's profile and the specified research field: "${researchField}", identify 3 top globally renowned professors who are actively researching in this exact niche.
+      3. Write a highly personalized cold email draft (under 150 words) for each professor, referencing one of their recent works and aligning it with the candidate's skills.
+      
+      You MUST return exactly a JSON array of objects with this schema:
+      [
+        {
+          "name": "Professor Name",
+          "university": "University Name",
+          "email": "prof@university.edu",
+          "match_score": 95,
+          "email_draft": "Dear Prof. [Name],\n\n..."
+        }
+      ]
+      Return ONLY valid JSON. No markdown formatting blocks around the JSON.
+    `;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            { inlineData: { data: base64Data, mimeType: 'application/pdf' } },
+            { text: prompt }
+          ]
+        }
+      ],
+      config: {
+          responseMimeType: "application/json"
       }
-    ];
+    });
 
-    return NextResponse.json({ success: true, data: mockedResponse });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: "Failed to generate matches" }, { status: 500 });
+    let textResponse = response.text || "[]";
+    const parsedData = JSON.parse(textResponse);
+
+    return NextResponse.json({ success: true, data: parsedData });
+  } catch (error: any) {
+    console.error("API Error:", error);
+    return NextResponse.json({ success: false, error: error.message || "Failed to generate matches" }, { status: 500 });
   }
 }
