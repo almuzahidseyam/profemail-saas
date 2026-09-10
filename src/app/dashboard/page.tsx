@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { UploadCloud, Search, Send, FileText } from 'lucide-react';
 
 export default function Dashboard() {
   const [step, setStep] = useState(1);
@@ -12,14 +11,14 @@ export default function Dashboard() {
       
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
-          { icon: UploadCloud, title: 'Upload Resume', step: 1 },
-          { icon: Search, title: 'Find Professors', step: 2 },
-          { icon: FileText, title: 'Draft Emails', step: 3 },
-          { icon: Send, title: 'Send via Gmail', step: 4 }
+          { title: 'Upload Resume', step: 1 },
+          { title: 'Find Professors', step: 2 },
+          { title: 'Draft Emails', step: 3 },
+          { title: 'Send via Gmail', step: 4 }
         ].map((item) => (
           <div key={item.step} className={`p-4 rounded-lg border ${step >= item.step ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'} flex items-center space-x-3`}>
-            <div className={`p-2 rounded-full ${step >= item.step ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
-              <item.icon className="w-5 h-5" />
+            <div className={`w-8 h-8 flex items-center justify-center rounded-full ${step >= item.step ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
+              {item.step}
             </div>
             <span className={`font-medium ${step >= item.step ? 'text-blue-900' : 'text-gray-500'}`}>{item.title}</span>
           </div>
@@ -29,7 +28,6 @@ export default function Dashboard() {
       <div className="bg-white rounded-xl shadow-sm border p-8">
         {step === 1 && (
           <div className="text-center py-10">
-            <UploadCloud className="w-16 h-16 mx-auto text-blue-500 mb-4" />
             <h2 className="text-2xl font-semibold mb-2">Upload your Academic Profile</h2>
             <p className="text-gray-500 mb-6">Upload your Resume/CV to let AI understand your background.</p>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-10 bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
@@ -93,13 +91,9 @@ export default function Dashboard() {
 
         {step === 4 && (
           <div className="text-center py-20">
-            <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Send className="w-10 h-10" />
-            </div>
             <h2 className="text-3xl font-bold mb-4">Emails Ready to Send</h2>
             <p className="text-gray-500 mb-8">You have 3 approved emails. Connect your Gmail account to dispatch them automatically.</p>
             <button className="bg-red-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-red-700 transition flex items-center justify-center mx-auto space-x-2">
-              <svg className="w-6 h-6 bg-white rounded-full p-1 text-red-600" viewBox="0 0 24 24" fill="currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>
               <span>Connect Gmail & Send</span>
             </button>
           </div>
