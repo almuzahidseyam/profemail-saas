@@ -4,9 +4,16 @@ An AI-powered Software-as-a-Service (SaaS) platform that automates PhD outreach.
 
 ## Features
 - **Smart Resume Parsing**: Upload your CV and let AI understand your research niche.
-- **Professor Matchmaking**: Scrapes academic databases to find professors currently publishing in your exact field.
+- **Professor Matchmaking**: Asks Gemini for professors publishing in your field, ranked against
+  your CV.
+
+  > **Check every name and address before you send anything.** The professors, their
+  > universities and their email addresses come from the model's own knowledge — nothing is
+  > scraped and no directory is consulted, so an address can be out of date or invented
+  > outright. Treat the output as a shortlist to verify on the department's own website, not
+  > as a mailing list.
 - **Automated Drafting**: Generates context-aware, non-spammy cold emails referencing the professor's latest work.
-- **Direct Gmail Integration**: Send approved drafts directly from the dashboard.
+- **Direct Gmail Integration**: Send drafts from the dashboard once you have verified the address.
 
 ## Tech Stack
 - **Frontend**: Next.js 14, TailwindCSS, React
