@@ -62,7 +62,11 @@ For a reproducible local network check, start production on `127.0.0.1:3097`, th
 
 ## Hosting
 
-No hosting project or deployment configuration existed in this repository at this update. The source runs locally or on an existing compatible Node.js host. This change does not deploy into the owner’s private-life archive Firebase project or create hosting/billing resources. The optional outreach route needs a Node server; do not silently publish it as a static-only app.
+**Live:** [profemail-saas.vercel.app](https://profemail-saas.vercel.app) · [Resume Lab](https://profemail-saas.vercel.app/resume-checker)
+
+The project is connected to Vercel as `profemail-saas` in the owner’s existing account and linked to this GitHub repository. `vercel.json` selects Next.js, installs with `npm ci`, builds with `npm run build`, and allows up to 60 seconds for the optional outreach function. `.vercelignore` excludes credentials, local configuration, test fixtures, screenshots, dependencies and development output; the build regenerates its own PDF worker. Resume Lab works online without any API key. Optional outreach stays disabled until its server-only environment variables are configured. No paid service or plan upgrade is provisioned. The private-life archive Firebase project is not used for this deployment.
+
+For a linked checkout, run `vercel --prod --yes` to deploy. Future Git pushes use the connected Vercel Git integration. Keep API secrets in Vercel’s encrypted environment settings, never in Git or `NEXT_PUBLIC_*` variables. Standard hosting access logs remain separate from the browser-local CV content.
 
 ## Stack
 
